@@ -13,19 +13,6 @@ services:
             MYSQL_USER: ${DB_USERNAME}
             MYSQL_PASSWORD: ${DB_PASSWORD}
             MYSQL_DATABASES: ${DB_PROD_NAME} ${DB_DEV_NAME}
-    webserver:
-        image: caddy
-        restart: always
-        privileged: true
-        links:
-            - rainloop
-        ports:
-            - "80:80"
-            - "443:443"
-        volumes:
-            - ./Caddyfile:/etc/caddy/Caddyfile
-            - ./data/caddy/data:/data
-            - ./data/caddy/config:/config
     phpmyadmin:
         depends_on:
             - db
@@ -61,3 +48,18 @@ services:
             WORDPRESS_DB_USER: ${DB_USERNAME}
             WORDPRESS_DB_PASSWORD: ${DB_PASSWORD}
             WORDPRESS_DB_NAME: ${DB_DEV_NAME}
+    webserver:
+        image: caddy
+        restart: always
+        privileged: true
+        links:
+            - phpmyadmin
+            - prod
+            - dev
+        ports:
+            - "80:80"
+            - "443:443"
+        volumes:
+            - ./Caddyfile:/etc/caddy/Caddyfile
+            - ./data/caddy/data:/data
+            - ./data/caddy/config:/config

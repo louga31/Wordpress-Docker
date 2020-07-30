@@ -15,10 +15,6 @@ services:
     prod:
         ports:
             - 127.0.0.1:8080:80
-        environment:
-            WORDPRESS_CONFIG_EXTRA: |
-                /* Multisite */
-                define('WP_ALLOW_MULTISITE', true);
         healthcheck:
             test: ["CMD", "curl", "-f", "https://domain.com"]
             interval: 1m
@@ -28,10 +24,6 @@ services:
     dev:
         ports:
             - 127.0.0.1:8888:80
-        environment:
-            WORDPRESS_CONFIG_EXTRA: |
-                /* Multisite */
-                define('WP_ALLOW_MULTISITE', true);
         healthcheck:
             test: ["CMD", "curl", "-f", "http://dev.domain.com"]
             interval: 1m

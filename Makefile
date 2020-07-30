@@ -9,17 +9,13 @@ help:
 ##
 ##Setups
 ##---------------------------------------------------------------------------
-.PHONY: install start stop up down prod dev phpmyadmin logs
-start:										## start stopped containers
-	$(DOCKER_COMPOSE) start
-stop:										## stop
-	$(DOCKER_COMPOSE) stop
+.PHONY: up down prod dev phpmyadmin logs
 up: 										## launch all containers
 	$(DOCKER_COMPOSE) up -d
 down: 										## destroy all containers (without volumes)
 	$(DOCKER_COMPOSE) down --remove-orphans
 prod: 										## launch prod
-	$(DOCKER_COMPOSE) up -d db webserver phpmyadmin prod
+	$(DOCKER_COMPOSE) up -d db webserver prod
 dev: 										## launch dev
 	$(DOCKER_COMPOSE) up -d db webserver phpmyadmin dev
 phpmyadmin: 								## launch phpmyadmin only
