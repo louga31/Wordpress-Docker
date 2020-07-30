@@ -1,0 +1,63 @@
+version: '3.8'
+
+services:
+    db:
+        build: ./docker/db
+        restart: always
+        expose:
+            - 3306
+        volumes:
+            - ./data/database:/var/lib/mysql
+        environment:
+            MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
+            MYSQL_USER: ${DB_USERNAME}
+            MYSQL_PASSWORD: ${DB_PASSWORD}
+            MYSQL_DATABASES: ${DB_PROD_NAME} ${DB_DEV_NAME}
+    webserver:
+        image: caddy
+        restart: always
+        privileged: true
+        links:
+            - rainloop
+        ports:
+            - "80:80"
+            - "443:443"
+        volumes:
+            - ./Caddyfile:/etc/caddy/Caddyfile
+            - ./data/caddy/data:/data
+            - ./data/caddy/config:/config
+    phpmyadmin:
+        depends_on:
+            - db
+        image: phpmyadmin/phpmyadmin
+        restart: always
+        environment:
+            PMA_USER: root
+            PMA_PASSWORD: ${DB_ROOT_PASSWORD}
+            PMA_HOST: db
+    prod:
+        depends_on:
+            - db
+        image: wordpress
+        restart: always
+        volumes:
+            - ./data/prod:/var/www/html
+        environment:
+            MYSQL_PORT_3306_TCP: 3306
+            WORDPRESS_DB_HOST: db
+            WORDPRESS_DB_USER: ${DB_USERNAME}
+            WORDPRESS_DB_PASSWORD: ${DB_PASSWORD}
+            WORDPRESS_DB_NAME: ${DB_PROD_NAME}
+    dev:
+        depends_on:
+            - db
+        image: wordpress
+        restart: always
+        volumes:
+            - ./data/dev:/var/www/html
+        environment:
+            MYSQL_PORT_3306_TCP: 3306
+            WORDPRESS_DB_HOST: db
+            WORDPRESS_DB_USER: ${DB_USERNAME}
+            WORDPRESS_DB_PASSWORD: ${DB_PASSWORD}
+            WORDPRESS_DB_NAME: ${DB_DEV_NAME}

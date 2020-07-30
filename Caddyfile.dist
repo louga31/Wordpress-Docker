@@ -1,0 +1,11 @@
+domain.com {
+    reverse_proxy prod:8080
+}
+
+dev.domain.com {
+    reverse_proxy dev:8888
+}
+
+phpmyadmin.domain.com {
+    reverse_proxy phpmyadmin:2082
+}

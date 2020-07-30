@@ -1,0 +1,40 @@
+version: '3.8'
+
+services:
+    phpmyadmin:
+        ports:
+            - 127.0.0.1:2082:80
+        environment:
+            UPLOAD_LIMIT: 536870912
+        healthcheck:
+            test: ["CMD", "curl", "-f", "http://domain.com:2082"]
+            interval: 1m
+            timeout: 10s
+            retries: 3
+            start_period: 5s
+    prod:
+        ports:
+            - 127.0.0.1:8080:80
+        environment:
+            WORDPRESS_CONFIG_EXTRA: |
+                /* Multisite */
+                define('WP_ALLOW_MULTISITE', true);
+        healthcheck:
+            test: ["CMD", "curl", "-f", "https://domain.com"]
+            interval: 1m
+            timeout: 10s
+            retries: 3
+            start_period: 10s
+    dev:
+        ports:
+            - 127.0.0.1:8888:80
+        environment:
+            WORDPRESS_CONFIG_EXTRA: |
+                /* Multisite */
+                define('WP_ALLOW_MULTISITE', true);
+        healthcheck:
+            test: ["CMD", "curl", "-f", "http://dev.domain.com"]
+            interval: 1m
+            timeout: 10s
+            retries: 3
+            start_period: 10s
