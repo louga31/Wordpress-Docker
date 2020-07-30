@@ -19,6 +19,11 @@ mv docker-compose.yml.dist docker-compose.yml
 mv docker-compose.override.yml.dist docker-compose.override.yml
 ```
 
+Don't forget to edit these files to reflect your setup:
+- .env for db setup
+- Caddyfile for domain name
+- docker-compose.override.yml for healthcheck domain name
+
 ## Usage
 
 ```bash
